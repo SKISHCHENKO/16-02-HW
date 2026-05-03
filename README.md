@@ -109,3 +109,27 @@
 3.Примените изменения.  
 
 ## Решение 5
+
+В файле locals.tf создан один local-блок. В нём описаны имена обеих ВМ: vm_web_full_name и vm_db_full_name.  
+
+Имена ВМ формируются через интерполяцию из нескольких переменных: var.vm_project, var.vpc_name, var.vm_platform_name, var.vm_web_name и var.vm_db_name.  
+
+В main.tf в ресурсах yandex_compute_instance.platform и yandex_compute_instance.platform_db значения name и hostname заменены на local.vm_web_full_name и local.vm_db_full_name.  
+
+Скриншот выполнения: 
+
+![Задание 5](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task5_1.png)
+
+## Задание 6
+
+## Решение 6
+
+В задании 6 отдельные переменные vm_web_cores, vm_web_memory, vm_web_core_fraction, vm_db_cores, vm_db_memory и vm_db_core_fraction были заменены на одну общую map-переменную vms_resources.  
+
+Внутри vms_resources описаны конфигурации для двух ВМ: web и db. В блоках resources теперь используются значения var.vms_resources["web"].cores, var.vms_resources["web"].memory, var.vms_resources["web"].core_fraction и аналогично для db.  
+
+Также создана общая переменная metadata типа map(string), которая используется в обеих ВМ через metadata = var.metadata.  
+
+Неиспользуемые переменные были закомментированы.  
+ 
+После выполнения terraform plan изменений нет: инфраструктура соответствует конфигурации.  

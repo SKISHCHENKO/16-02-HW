@@ -35,7 +35,9 @@ variable "service_account_key_file" {
 
 ### ssh vars
 
-variable "vms_ssh_public_root_key" {
-  type        = string
-  description = "Public SSH key for VM user ubuntu"
-}
+# Больше не используется после задания 6.
+# SSH-ключ теперь передаётся через var.metadata.
+# variable "vms_ssh_public_root_key" {
+#   type        = string
+#   description = "Public SSH key for VM user ubuntu"
+# }

@@ -1,3 +1,17 @@
+### vm naming vars
+
+variable "vm_project" {
+  type        = string
+  default     = "netology"
+  description = "Project name prefix for VM names"
+}
+
+variable "vm_platform_name" {
+  type        = string
+  default     = "platform"
+  description = "Platform name part for VM names"
+}
+
 ### web vm vars
 
 variable "vm_web_image_family" {
@@ -8,15 +22,17 @@ variable "vm_web_image_family" {
 
 variable "vm_web_name" {
   type        = string
-  default     = "netology-develop-platform-web"
-  description = "Name of the web VM"
+  default     = "web"
+  description = "Web VM name suffix"
 }
 
-variable "vm_web_hostname" {
-  type        = string
-  default     = "netology-develop-platform-web"
-  description = "Hostname of the web VM"
-}
+# Больше не используется после задания 5.
+# Hostname формируется через local.vm_web_full_name.
+# variable "vm_web_hostname" {
+#   type        = string
+#   default     = "netology-develop-platform-web"
+#   description = "Hostname of the web VM"
+# }
 
 variable "vm_web_platform_id" {
   type        = string
@@ -24,23 +40,29 @@ variable "vm_web_platform_id" {
   description = "Platform ID for the web VM"
 }
 
-variable "vm_web_cores" {
-  type        = number
-  default     = 2
-  description = "Number of CPU cores for the web VM"
-}
+# Больше не используется после задания 6.
+# Значение перенесено в var.vms_resources["web"].cores.
+# variable "vm_web_cores" {
+#   type        = number
+#   default     = 2
+#   description = "Number of CPU cores for the web VM"
+# }
 
-variable "vm_web_memory" {
-  type        = number
-  default     = 2
-  description = "Memory size in GB for the web VM"
-}
+# Больше не используется после задания 6.
+# Значение перенесено в var.vms_resources["web"].memory.
+# variable "vm_web_memory" {
+#   type        = number
+#   default     = 2
+#   description = "Memory size in GB for the web VM"
+# }
 
-variable "vm_web_core_fraction" {
-  type        = number
-  default     = 5
-  description = "Guaranteed vCPU performance fraction for the web VM"
-}
+# Больше не используется после задания 6.
+# Значение перенесено в var.vms_resources["web"].core_fraction.
+# variable "vm_web_core_fraction" {
+#   type        = number
+#   default     = 5
+#   description = "Guaranteed vCPU performance fraction for the web VM"
+# }
 
 variable "vm_web_preemptible" {
   type        = bool
@@ -54,25 +76,29 @@ variable "vm_web_nat" {
   description = "Enable public NAT IP for web VM"
 }
 
-variable "vm_web_serial_port_enable" {
-  type        = number
-  default     = 1
-  description = "Enable serial port for web VM"
-}
+# Больше не используется после задания 6.
+# Значение перенесено в var.metadata.
+# variable "vm_web_serial_port_enable" {
+#   type        = number
+#   default     = 1
+#   description = "Enable serial port for web VM"
+# }
 
 ### db vm vars
 
 variable "vm_db_name" {
   type        = string
-  default     = "netology-develop-platform-db"
-  description = "Name of the db VM"
+  default     = "db"
+  description = "DB VM name suffix"
 }
 
-variable "vm_db_hostname" {
-  type        = string
-  default     = "netology-develop-platform-db"
-  description = "Hostname of the db VM"
-}
+# Больше не используется после задания 5.
+# Hostname формируется через local.vm_db_full_name.
+# variable "vm_db_hostname" {
+#   type        = string
+#   default     = "netology-develop-platform-db"
+#   description = "Hostname of the db VM"
+# }
 
 variable "vm_db_platform_id" {
   type        = string
@@ -92,23 +118,29 @@ variable "vm_db_cidr" {
   description = "CIDR block for db subnet"
 }
 
-variable "vm_db_cores" {
-  type        = number
-  default     = 2
-  description = "Number of CPU cores for the db VM"
-}
+# Больше не используется после задания 6.
+# Значение перенесено в var.vms_resources["db"].cores.
+# variable "vm_db_cores" {
+#   type        = number
+#   default     = 2
+#   description = "Number of CPU cores for the db VM"
+# }
 
-variable "vm_db_memory" {
-  type        = number
-  default     = 2
-  description = "Memory size in GB for the db VM"
-}
+# Больше не используется после задания 6.
+# Значение перенесено в var.vms_resources["db"].memory.
+# variable "vm_db_memory" {
+#   type        = number
+#   default     = 2
+#   description = "Memory size in GB for the db VM"
+# }
 
-variable "vm_db_core_fraction" {
-  type        = number
-  default     = 20
-  description = "Guaranteed vCPU performance fraction for the db VM"
-}
+# Больше не используется после задания 6.
+# Значение перенесено в var.vms_resources["db"].core_fraction.
+# variable "vm_db_core_fraction" {
+#   type        = number
+#   default     = 20
+#   description = "Guaranteed vCPU performance fraction for the db VM"
+# }
 
 variable "vm_db_preemptible" {
   type        = bool
@@ -122,8 +154,43 @@ variable "vm_db_nat" {
   description = "Enable public NAT IP for db VM"
 }
 
-variable "vm_db_serial_port_enable" {
-  type        = number
-  default     = 1
-  description = "Enable serial port for db VM"
+# Больше не используется после задания 6.
+# Значение перенесено в var.metadata.
+# variable "vm_db_serial_port_enable" {
+#   type        = number
+#   default     = 1
+#   description = "Enable serial port for db VM"
+# }
+
+### common resources vars
+
+variable "vms_resources" {
+  type = map(object({
+    cores         = number
+    memory        = number
+    core_fraction = number
+  }))
+
+  default = {
+    web = {
+      cores         = 2
+      memory        = 2
+      core_fraction = 5
+    }
+
+    db = {
+      cores         = 2
+      memory        = 2
+      core_fraction = 20
+    }
+  }
+
+  description = "Resources configuration for web and db virtual machines"
+}
+
+### common metadata vars
+
+variable "metadata" {
+  type        = map(string)
+  description = "Common metadata for all virtual machines"
 }
