@@ -122,6 +122,40 @@
 
 ## Задание 6
 
+1.Вместо использования трёх переменных ".._cores",".._memory",".._core_fraction" в блоке resources {...}, объедините их в единую map-переменную vms_resources и внутри неё конфиги обеих ВМ в виде вложенного map(object).  
+
+пример из terraform.tfvars:  
+vms_resources = {  
+  web={  
+    cores=2  
+    memory=2  
+    core_fraction=5  
+    hdd_size=10  
+    hdd_type="network-hdd"  
+    ...  
+  },  
+  db= {  
+    cores=2  
+    memory=4  
+    core_fraction=20  
+    hdd_size=10  
+    hdd_type="network-ssd"  
+    ...  
+  }  
+}  
+2.Создайте и используйте отдельную map(object) переменную для блока metadata, она должна быть общая для всех ваших ВМ.  
+
+пример из terraform.tfvars:  
+metadata = {  
+  serial-port-enable = 1  
+  ssh-keys           = "ubuntu:ssh-ed25519 AAAAC..."  
+}  
+3.Найдите и закоментируйте все, более не используемые переменные проекта.  
+
+4.Проверьте terraform plan. Изменений быть не должно.  
+
+
+
 ## Решение 6
 
 В задании 6 отдельные переменные vm_web_cores, vm_web_memory, vm_web_core_fraction, vm_db_cores, vm_db_memory и vm_db_core_fraction были заменены на одну общую map-переменную vms_resources.  
@@ -133,3 +167,5 @@
 Неиспользуемые переменные были закомментированы.  
  
 После выполнения terraform plan изменений нет: инфраструктура соответствует конфигурации.  
+
+![Задание 6](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task6_1.png)
