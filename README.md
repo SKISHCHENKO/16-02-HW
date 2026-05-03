@@ -67,3 +67,45 @@
 3.Примените изменения.  
 
 ## Решение 3
+
+Для задания 3 создан файл vms_platform.tf. В него перенесены все переменные первой ВМ с префиксом vm_web_.  
+
+В этот же файл добавлены переменные второй ВМ с префиксом vm_db_: vm_db_name, vm_db_hostname, vm_db_platform_id, vm_db_zone, vm_db_cores, vm_db_memory, vm_db_core_fraction и другие параметры.  
+
+В main.tf добавлен второй ресурс yandex_compute_instance.platform_db для ВМ netology-develop-platform-db. Для размещения ВМ в зоне ru-central1-b также добавлена отдельная подсеть yandex_vpc_subnet.develop_db с CIDR 10.0.2.0/24, потому что подсети в Yandex Cloud являются зональными.  
+
+После terraform apply были созданы новая подсеть и новая ВМ.  
+
+Скриншот проверки yc и terraform state list
+![Задание 3](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task3_1.png)
+
+Скриншот ЛК yandex cloud
+
+![Задание 3](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task3_2.png)
+
+
+## Задание 4
+
+1.Объявите в файле outputs.tf один output , содержащий: instance_name, external_ip, fqdn для каждой из ВМ в удобном лично для вас формате.(без хардкода!!!)  
+2.Примените изменения.  
+В качестве решения приложите вывод значений ip-адресов команды terraform output.
+
+## Решение 4
+
+В файле outputs.tf объявлен один output vms_info. Он содержит данные по двум ВМ: web и db. Для каждой ВМ выводятся instance_name, external_ip и fqdn.  
+
+Значения не захардкожены, а берутся напрямую из ресурсов yandex_compute_instance.platform и yandex_compute_instance.platform_db.  
+
+Скриншоты применения изменений и непосредственно terraform output
+
+![Задание 4](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task4_1.png)
+
+![Задание 4](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task4_2.png)
+
+## Задание 5
+
+1.В файле locals.tf опишите в одном local-блоке имя каждой ВМ, используйте интерполяцию ${..} с НЕСКОЛЬКИМИ переменными по примеру из лекции.  
+2.Замените переменные внутри ресурса ВМ на созданные вами local-переменные.  
+3.Примените изменения.  
+
+## Решение 5
