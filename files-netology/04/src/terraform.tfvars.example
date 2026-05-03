@@ -1,0 +1,9 @@
+cloud_id  = "<your-cloud-id>"
+folder_id = "<your-folder-id>"
+
+# Вставьте содержимое вашего публичного ключа:
+# cat ~/.ssh/id_ed25519.pub
+ssh_public_key = "ssh-ed25519 AAAA... user@host"
+
+instance_user = "ubuntu"
+owner         = "sergk"
