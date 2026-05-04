@@ -1,0 +1,88 @@
+variable "security_group_ingress" {
+  description = "Security group ingress rules"
+
+  type = list(object({
+    protocol       = string
+    description    = string
+    v4_cidr_blocks = list(string)
+    port           = optional(number)
+    from_port      = optional(number)
+    to_port        = optional(number)
+  }))
+
+  default = [
+    {
+      protocol       = "TCP"
+      description    = "разрешить входящий ssh"
+      v4_cidr_blocks = ["0.0.0.0/0"]
+      port           = 22
+    },
+    {
+      protocol       = "TCP"
+      description    = "разрешить входящий http"
+      v4_cidr_blocks = ["0.0.0.0/0"]
+      port           = 80
+    },
+    {
+      protocol       = "TCP"
+      description    = "разрешить входящий https"
+      v4_cidr_blocks = ["0.0.0.0/0"]
+      port           = 443
+    }
+  ]
+}
+
+variable "security_group_egress" {
+  description = "Security group egress rules"
+
+  type = list(object({
+    protocol       = string
+    description    = string
+    v4_cidr_blocks = list(string)
+    port           = optional(number)
+    from_port      = optional(number)
+    to_port        = optional(number)
+  }))
+
+  default = [
+    {
+      protocol       = "TCP"
+      description    = "разрешить весь исходящий трафик"
+      v4_cidr_blocks = ["0.0.0.0/0"]
+      from_port      = 0
+      to_port        = 65535
+    }
+  ]
+}
+
+resource "yandex_vpc_security_group" "example" {
+  name       = "example-dynamic"
+  network_id = yandex_vpc_network.develop.id
+  folder_id  = var.folder_id
+
+  dynamic "ingress" {
+    for_each = var.security_group_ingress
+
+    content {
+      protocol       = ingress.value.protocol
+      description    = ingress.value.description
+      port           = try(ingress.value.port, null)
+      from_port      = try(ingress.value.from_port, null)
+      to_port        = try(ingress.value.to_port, null)
+      v4_cidr_blocks = ingress.value.v4_cidr_blocks
+    }
+  }
+
+  dynamic "egress" {
+    for_each = var.security_group_egress
+
+    content {
+      protocol       = egress.value.protocol
+      description    = egress.value.description
+      port           = try(egress.value.port, null)
+      from_port      = try(egress.value.from_port, null)
+      to_port        = try(egress.value.to_port, null)
+      v4_cidr_blocks = egress.value.v4_cidr_blocks
+    }
+  }
+}

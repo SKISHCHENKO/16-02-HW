@@ -1,171 +1,67 @@
-# Домашнее задание к занятию «Основы Terraform. Yandex Cloud»
+# Домашнее задание к занятию «Управляющие конструкции в коде Terraform»
 
 
 ## Задание 1 
 
-В качестве ответа всегда полностью прикладывайте ваш terraform-код в git. Убедитесь что ваша версия Terraform ~>1.12.0
+1.Изучите проект.  
+2.Инициализируйте проект, выполните код.  
 
-1.Изучите проект. В файле variables.tf объявлены переменные для Yandex provider.  
-2.Создайте сервисный аккаунт и ключ. service_account_key_file.  
-3.Сгенерируйте новый или используйте свой текущий ssh-ключ. Запишите его открытую(public) часть в переменную vms_ssh_public_root_key.  
-4.Инициализируйте проект, выполните код. Исправьте намеренно допущенные синтаксические ошибки. Ищите внимательно, посимвольно. Ответьте, в чём заключается их суть.  
-5.Подключитесь к консоли ВМ через ssh и выполните команду  curl ifconfig.me. Примечание: К OS ubuntu "out of a box, те из коробки" необходимо подключаться под пользователем ubuntu: "ssh ubuntu@vm_ip_address". Предварительно убедитесь, что ваш ключ добавлен в ssh-агент: eval $(ssh-agent) && ssh-add Вы познакомитесь с тем как при создании ВМ создать своего пользователя в блоке metadata в следующей лекции.;  
-6.Ответьте, как в процессе обучения могут пригодиться параметры preemptible = true и core_fraction=5 в параметрах ВМ.  
-
-В качестве решения приложите:
-
-- скриншот ЛК Yandex Cloud с созданной ВМ, где видно внешний ip-адрес;  
-- скриншот консоли, curl должен отобразить тот же внешний ip-адрес;  
-- ответы на вопросы.  
-
+Приложите скриншот входящих правил «Группы безопасности» в ЛК Yandex Cloud .
 
 ## Решение 1
 
-Создание ВМ через команды yc
 
-![Задание 1](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task1_1.png)
 
-Скриншот ЛК Yandex Cloud с созданной ВМ, где видно внешний ip-адрес: 
+![Задание 1](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/03/task1_1.png)
 
-![Задание 1](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task1_2.png)
 
-Скриншот консоли, curl должен отобразить тот же внешний ip-адрес;
-
-![Задание 1](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task1_3.png)
-
-В исходном main.tf была намеренно допущена ошибка в названии платформы: было platform_id = "standart-v4". Суть ошибки в опечатке: написано standart вместо standard. Исправлено на platform_id = "standard-v2".  
-
-Также в проекте были проверены переменные provider-блока: cloud_id, folder_id, default_zone и service_account_key_file. Для подключения к ВМ через SSH публичная часть ключа была записана в переменную vms_ssh_public_root_key и добавлена в metadata в формате ubuntu:<public_key>.  
-
-Параметр preemptible = true полезен тем, что создаёт прерываемую ВМ. Такая ВМ дешевле обычной, подходит для временных работ, но может быть остановлена облаком.  
-
-Параметр core_fraction = 5 полезен для экономии ресурсов. Он означает, что ВМ получает 5% гарантированной производительности vCPU. Для учебных задач, SSH, curl и простых проверок Terraform этого достаточно.  
 
 
 ## Задание 2
 
-1.Замените все хардкод-значения для ресурсов yandex_compute_image и yandex_compute_instance на отдельные переменные. К названиям переменных ВМ добавьте в начало префикс vm_web_ . Пример: vm_web_name.  
-2.Объявите нужные переменные в файле variables.tf, обязательно указывайте тип переменной. Заполните их default прежними значениями из main.tf.  
-3.Проверьте terraform plan. Изменений быть не должно.  
+1.Создайте файл count-vm.tf. Опишите в нём создание двух одинаковых ВМ web-1 и web-2 (не web-0 и web-1) с минимальными параметрами, используя мета-аргумент count loop. Назначьте ВМ созданную в первом задании группу безопасности.(как это сделать узнайте в документации провайдера yandex/compute_instance )  
+2.Создайте файл for_each-vm.tf. Опишите в нём создание двух ВМ для баз данных с именами "main" и "replica" разных по cpu/ram/disk_volume , используя мета-аргумент for_each loop. Используйте для обеих ВМ одну общую переменную типа:  
+
+variable "each_vm" {  
+  type = list(object({  vm_name=string, cpu=number, ram=number, disk_volume=number }))  
+}  
+При желании внесите в переменную все возможные параметры. 3. ВМ, описанные в файле count-vm.tf, должны создаваться после ВМ, описанных в файле for_each-vm.tf. 4. Используйте функцию file в local-переменной для считывания ключа ~/.ssh/id_rsa.pub и его последующего использования в блоке metadata, взятому из ДЗ 2. 5. Инициализируйте проект, выполните код.  
+
+
 
 ## Решение 2
 
-Все хардкод-значения из ресурсов yandex_compute_image и yandex_compute_instance были вынесены в отдельные переменные.  
-Для первой ВМ добавлены переменные с префиксом vm_web_: vm_web_name, vm_web_hostname, vm_web_platform_id, vm_web_cores, vm_web_memory, vm_web_core_fraction, vm_web_preemptible, vm_web_nat, vm_web_serial_port_enable.  
-Для образа добавлена переменная vm_web_image_family.  
-
-Все переменные объявлены в variables.tf с указанием type и default-значений, соответствующих прежним значениям из main.tf.  
-
-После выполнения terraform plan изменений нет: инфраструктура соответствует конфигурации, о чем говорит скриншот:
-
-![Задание 2](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task2_1.png)
 
 ## Задание 3
 
-1.Создайте в корне проекта файл 'vms_platform.tf' . Перенесите в него все переменные первой ВМ.  
-2.Скопируйте блок ресурса и создайте с его помощью вторую ВМ в файле main.tf: "netology-develop-platform-db" , cores  = 2, memory = 2, core_fraction = 20. Объявите её переменные с префиксом vm_db_ в том же файле ('vms_platform.tf'). ВМ должна работать в зоне "ru-central1-b"  
-3.Примените изменения.  
+1.Создайте 3 одинаковых виртуальных диска размером 1 Гб с помощью ресурса yandex_compute_disk и мета-аргумента count в файле disk_vm.tf .  
+2.Создайте в том же файле одиночную(использовать count или for_each запрещено из-за задания №4) ВМ c именем "storage" . Используйте блок dynamic secondary_disk{..} и мета-аргумент for_each для подключения созданных вами дополнительных дисков.  
+
+
 
 ## Решение 3
 
-Для задания 3 создан файл vms_platform.tf. В него перенесены все переменные первой ВМ с префиксом vm_web_.  
 
-В этот же файл добавлены переменные второй ВМ с префиксом vm_db_: vm_db_name, vm_db_hostname, vm_db_platform_id, vm_db_zone, vm_db_cores, vm_db_memory, vm_db_core_fraction и другие параметры.  
-
-В main.tf добавлен второй ресурс yandex_compute_instance.platform_db для ВМ netology-develop-platform-db. Для размещения ВМ в зоне ru-central1-b также добавлена отдельная подсеть yandex_vpc_subnet.develop_db с CIDR 10.0.2.0/24, потому что подсети в Yandex Cloud являются зональными.  
-
-После terraform apply были созданы новая подсеть и новая ВМ.  
-
-Скриншот проверки yc и terraform state list
-![Задание 3](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task3_1.png)
-
-Скриншот ЛК yandex cloud
-
-![Задание 3](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task3_2.png)
 
 
 ## Задание 4
 
-1.Объявите в файле outputs.tf один output , содержащий: instance_name, external_ip, fqdn для каждой из ВМ в удобном лично для вас формате.(без хардкода!!!)  
-2.Примените изменения.  
-В качестве решения приложите вывод значений ip-адресов команды terraform output.
+1.В файле ansible.tf создайте inventory-файл для ansible. Используйте функцию tepmplatefile и файл-шаблон для создания ansible inventory-файла из лекции. Готовый код возьмите из демонстрации к лекции demonstration2. Передайте в него в качестве переменных группы виртуальных машин из задания 2.1, 2.2 и 3.2, т. е. 5 ВМ.  
+2.Инвентарь должен содержать 3 группы и быть динамическим, т. е. обработать как группу из 2-х ВМ, так и 999 ВМ.  
+3.Добавьте в инвентарь переменную fqdn.  
+
+[webservers]  
+web-1 ansible_host=<внешний ip-адрес> fqdn=<полное доменное имя виртуальной машины>  
+web-2 ansible_host=<внешний ip-адрес> fqdn=<полное доменное имя виртуальной машины>  
+
+[databases]  
+main ansible_host=<внешний ip-адрес> fqdn=<полное доменное имя виртуальной машины>  
+replica ansible_host<внешний ip-адрес> fqdn=<полное доменное имя виртуальной машины>  
+
+[storage]  
+storage ansible_host=<внешний ip-адрес> fqdn=<полное доменное имя виртуальной машины>  
+Пример fqdn: web1.ru-central1.internal(в случае указания переменной hostname(не путать с переменной name)); fhm8k1oojmm5lie8i22a.auto.internal(в случае отсутвия перменной hostname - автоматическая генерация имени, зона изменяется на auto). нужную вам переменную найдите в документации провайдера или terraform console. 4. Выполните код. Приложите скриншот получившегося файла.  
+
 
 ## Решение 4
 
-В файле outputs.tf объявлен один output vms_info. Он содержит данные по двум ВМ: web и db. Для каждой ВМ выводятся instance_name, external_ip и fqdn.  
-
-Значения не захардкожены, а берутся напрямую из ресурсов yandex_compute_instance.platform и yandex_compute_instance.platform_db.  
-
-Скриншоты применения изменений и непосредственно terraform output
-
-![Задание 4](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task4_1.png)
-
-![Задание 4](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task4_2.png)
-
-## Задание 5
-
-1.В файле locals.tf опишите в одном local-блоке имя каждой ВМ, используйте интерполяцию ${..} с НЕСКОЛЬКИМИ переменными по примеру из лекции.  
-2.Замените переменные внутри ресурса ВМ на созданные вами local-переменные.  
-3.Примените изменения.  
-
-## Решение 5
-
-В файле locals.tf создан один local-блок. В нём описаны имена обеих ВМ: vm_web_full_name и vm_db_full_name.  
-
-Имена ВМ формируются через интерполяцию из нескольких переменных: var.vm_project, var.vpc_name, var.vm_platform_name, var.vm_web_name и var.vm_db_name.  
-
-В main.tf в ресурсах yandex_compute_instance.platform и yandex_compute_instance.platform_db значения name и hostname заменены на local.vm_web_full_name и local.vm_db_full_name.  
-
-Скриншот выполнения: 
-
-![Задание 5](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task5_1.png)
-
-## Задание 6
-
-1.Вместо использования трёх переменных ".._cores",".._memory",".._core_fraction" в блоке resources {...}, объедините их в единую map-переменную vms_resources и внутри неё конфиги обеих ВМ в виде вложенного map(object).  
-
-пример из terraform.tfvars:  
-vms_resources = {  
-  web={  
-    cores=2  
-    memory=2  
-    core_fraction=5  
-    hdd_size=10  
-    hdd_type="network-hdd"  
-    ...  
-  },  
-  db= {  
-    cores=2  
-    memory=4  
-    core_fraction=20  
-    hdd_size=10  
-    hdd_type="network-ssd"  
-    ...  
-  }  
-}  
-2.Создайте и используйте отдельную map(object) переменную для блока metadata, она должна быть общая для всех ваших ВМ.  
-
-пример из terraform.tfvars:  
-metadata = {  
-  serial-port-enable = 1  
-  ssh-keys           = "ubuntu:ssh-ed25519 AAAAC..."  
-}  
-3.Найдите и закоментируйте все, более не используемые переменные проекта.  
-
-4.Проверьте terraform plan. Изменений быть не должно.  
-
-
-
-## Решение 6
-
-В задании 6 отдельные переменные vm_web_cores, vm_web_memory, vm_web_core_fraction, vm_db_cores, vm_db_memory и vm_db_core_fraction были заменены на одну общую map-переменную vms_resources.  
-
-Внутри vms_resources описаны конфигурации для двух ВМ: web и db. В блоках resources теперь используются значения var.vms_resources["web"].cores, var.vms_resources["web"].memory, var.vms_resources["web"].core_fraction и аналогично для db.  
-
-Также создана общая переменная metadata типа map(string), которая используется в обеих ВМ через metadata = var.metadata.  
-
-Неиспользуемые переменные были закомментированы.  
- 
-После выполнения terraform plan изменений нет: инфраструктура соответствует конфигурации.  
-
-![Задание 6](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/task6_1.png)
