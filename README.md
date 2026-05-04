@@ -11,11 +11,12 @@
 ## Решение 1
 
 
-
+Скриншот выполнения команд в ubuntu
 ![Задание 1](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/03/task1_1.png)
 
+Скриншот входящих правил «Группы безопасности» в ЛК Yandex Cloud
 
-
+![Задание 1](https://github.com/SKISHCHENKO/16-02-HW/blob/main/img/03/task1_2.png)
 
 ## Задание 2
 
