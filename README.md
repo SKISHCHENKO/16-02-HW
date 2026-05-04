@@ -32,6 +32,56 @@ variable "each_vm" {
 
 ## Решение 2
 
+Создан файл `count-vm.tf`.
+
+В нём описано создание двух одинаковых web-ВМ через мета-аргумент `count`:
+
+- `web-1`  
+- `web-2`  
+
+Имена формируются выражением:  
+```hcl  
+name = "web-${count.index + 1}"  
+
+ВМ назначена группа безопасности из задания 1: security_group_ids = [yandex_vpc_security_group.example.id]  
+
+Создан файл for_each-vm.tf. В нём описано создание двух ВМ для баз данных через мета-аргумент for_each:  
+db-main;  
+db-replica.  
+
+Использована переменная:
+
+variable "each_vm" {  
+  type = list(object({  
+    vm_name     = string  
+    cpu         = number  
+    ram         = number  
+    disk_volume = number  
+  }))  
+}  
+
+Web-ВМ создаются после DB-ВМ через:
+
+depends_on = [  
+  yandex_compute_instance.db  
+]  
+
+SSH-ключ считывается через функцию file() в locals.tf: ssh_public_key = chomp(file(pathexpand("~/.ssh/id_rsa.pub")))  
+
+После выполнения terraform apply созданы четыре ВМ:    
+- web-1  
+- web-2  
+- db-main  
+- db-replica  
+
+
+Скриншот выполнения команд в ubuntu
+![Задание 2](https://github.com/SKISHCHENKO/16-02-HW/blob/terraform-03/img/03/task2_1.png)
+
+Скриншот списка работающих ВМ в ЛК Yandex Cloud
+
+![Задание 2](https://github.com/SKISHCHENKO/16-02-HW/blob/terraform-03/img/03/task2_2.png)
+
 
 ## Задание 3
 
