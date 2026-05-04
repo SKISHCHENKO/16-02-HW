@@ -12,11 +12,11 @@
 
 
 Скриншот выполнения команд в ubuntu
-![Задание 1](https://github.com/SKISHCHENKO/16-02-HW/blob/main/03/img/task1_1.png)
+![Задание 1](https://github.com/SKISHCHENKO/16-02-HW/blob/terraform-03/img/03/task1_1.png)
 
 Скриншот входящих правил «Группы безопасности» в ЛК Yandex Cloud
 
-![Задание 1](https://github.com/SKISHCHENKO/16-02-HW/blob/main/03/img/task1_2.png)
+![Задание 1](https://github.com/SKISHCHENKO/16-02-HW/blob/terraform-03/img/03/task1_2.png)
 
 ## Задание 2
 
