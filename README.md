@@ -151,3 +151,22 @@ storage ansible_host=<внешний ip-адрес> fqdn=<полное доме�
 
 ## Решение 4
 
+Создан файл `ansible.tf`.
+
+В нём с помощью функции `templatefile()` и шаблона `inventory.tftpl` создаётся Ansible inventory-файл `inventory.ini`.
+
+В inventory передаются три группы ВМ:
+
+- `webservers` — ВМ из задания 2.1, созданные через `count`  
+- `databases` — ВМ из задания 2.2, созданные через `for_each`  
+- `storage` — ВМ из задания 3.2  
+
+Для каждой ВМ в inventory добавлены:
+
+- inventory alias  
+- внешний IP через `ansible_host`  
+- полное доменное имя через `fqdn`  
+
+Пример результата:
+
+![Задание 4](https://github.com/SKISHCHENKO/16-02-HW/blob/terraform-03/img/03/task4_1.png)

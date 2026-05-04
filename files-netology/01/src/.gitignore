@@ -8,5 +8,16 @@
 *.tfstate
 *.tfstate.*
 
-# own secret vars store.
+# Terraform local variables
+terraform.tfvars
+*.tfvars
+*.tfvars.json
 personal.auto.tfvars
+
+# Yandex Cloud service account keys
+authorized_key.json
+*.key
+*.pem
+
+# Terraform lock file
+.terraform.lock.hcl
