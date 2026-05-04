@@ -39,9 +39,7 @@ variable "each_vm" {
 - `web-1`  
 - `web-2`  
 
-Имена формируются выражением:  
-```hcl  
-name = "web-${count.index + 1}"  
+Имена формируются выражением:  name = "web-${count.index + 1}"    
 
 ВМ назначена группа безопасности из задания 1: security_group_ids = [yandex_vpc_security_group.example.id]  
 
