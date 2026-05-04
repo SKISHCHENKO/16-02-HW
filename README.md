@@ -90,8 +90,45 @@ SSH-ключ считывается через функцию file() в locals.t
 
 ## Решение 3
 
+Создан файл `disk_vm.tf`.
 
+В нём описано создание трёх одинаковых дополнительных дисков через ресурс `yandex_compute_disk` и мета-аргумент `count`:
 
+resource "yandex_compute_disk" "storage_disks" {  
+  count = 3  
+
+  name = "storage-disk-${count.index + 1}"  
+  type = "network-hdd"  
+  zone = var.default_zone  
+  size = 1  
+}  
+
+Создана одиночная ВМ storage. Для неё не использовались count и for_each.
+
+Подключение дополнительных дисков выполнено через динамический блок secondary_disk:
+
+dynamic "secondary_disk" {  
+  for_each = yandex_compute_disk.storage_disks  
+
+  content {  
+    disk_id = secondary_disk.value.id  
+  }  
+}  
+
+После выполнения terraform apply были созданы:  
+
+- storage-disk-1  
+- storage-disk-2  
+- storage-disk-3  
+- ВМ storage  
+
+Проверка создания в ubuntu: 
+
+![Задание 3](https://github.com/SKISHCHENKO/16-02-HW/blob/terraform-03/img/03/task3_1.png)
+
+Скриншот списка работающих ВМ в ЛК Yandex Cloud. В списке появилась ВМ storage
+
+![Задание 3](https://github.com/SKISHCHENKO/16-02-HW/blob/terraform-03/img/03/task3_2.png)
 
 ## Задание 4
 
