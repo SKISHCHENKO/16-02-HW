@@ -1,0 +1,4 @@
+NETWORK_ID=enpd3kjs0efrktluatch
+SUBNET_ID=e9btggagomoungev1ql9
+MARKETING_VM_ID=fhmf53etdt58e85uacpr
+ANALYTICS_VM_ID=fhmttm49spl8ld8mtecs

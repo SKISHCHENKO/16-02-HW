@@ -1,0 +1,68 @@
+[0m[1mdata.template_file.cloudinit: Reading...[0m[0m
+[0m[1mdata.template_file.cloudinit: Read complete after 0s [id=2cfcd04419ab97c33d9209e91a0911b472942db01fb2794f9ba629385b8f3273][0m
+[0m[1mmodule.marketing_vm.data.yandex_compute_image.my_image: Reading...[0m[0m
+[0m[1mmodule.analytics_vm.data.yandex_compute_image.my_image: Reading...[0m[0m
+[0m[1mmodule.vpc_dev.yandex_vpc_network.this: Refreshing state... [id=enpd3kjs0efrktluatch][0m
+[0m[1mmodule.analytics_vm.data.yandex_compute_image.my_image: Read complete after 0s [id=fd86ooufjg3so85m4h4n][0m
+[0m[1mmodule.marketing_vm.data.yandex_compute_image.my_image: Read complete after 0s [id=fd86ooufjg3so85m4h4n][0m
+[0m[1mmodule.vpc_dev.yandex_vpc_subnet.this: Refreshing state... [id=e9btggagomoungev1ql9][0m
+[0m[1myandex_vpc_security_group.vm_sg: Refreshing state... [id=enpoq8a917vo4lk9n9o2][0m
+[0m[1mmodule.analytics_vm.yandex_compute_instance.vm[0]: Refreshing state... [id=fhmttm49spl8ld8mtecs][0m
+[0m[1mmodule.marketing_vm.yandex_compute_instance.vm[0]: Refreshing state... [id=fhmf53etdt58e85uacpr][0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [33m~[0m update in-place[0m
+
+Terraform will perform the following actions:
+
+[1m  # module.analytics_vm.yandex_compute_instance.vm[0][0m will be updated in-place
+[0m  [33m~[0m[0m resource "yandex_compute_instance" "vm" {
+      [32m+[0m[0m allow_stopping_for_update = true
+        id                        = "fhmttm49spl8ld8mtecs"
+        name                      = "analytics-vm-0"
+        [90m# (15 unchanged attributes hidden)[0m[0m
+
+        [90m# (6 unchanged blocks hidden)[0m[0m
+    }
+
+[1m  # module.marketing_vm.yandex_compute_instance.vm[0][0m will be updated in-place
+[0m  [33m~[0m[0m resource "yandex_compute_instance" "vm" {
+      [32m+[0m[0m allow_stopping_for_update = true
+        id                        = "fhmf53etdt58e85uacpr"
+        name                      = "marketing-vm-0"
+        [90m# (15 unchanged attributes hidden)[0m[0m
+
+        [90m# (6 unchanged blocks hidden)[0m[0m
+    }
+
+[1mPlan:[0m 0 to add, 2 to change, 0 to destroy.
+[0m
+Changes to Outputs:
+  [33m~[0m[0m module_analytics_vm    = {
+      [33m~[0m[0m all                 = [
+          [33m~[0m[0m {
+              [33m~[0m[0m allow_stopping_for_update = [90mnull[0m[0m [33m->[0m[0m true
+                id                        = "fhmttm49spl8ld8mtecs"
+                name                      = "analytics-vm-0"
+                [90m# (27 unchanged attributes hidden)[0m[0m
+            },
+        ]
+        [90m# (5 unchanged attributes hidden)[0m[0m
+    }
+  [33m~[0m[0m module_marketing_vm    = {
+      [33m~[0m[0m all                 = [
+          [33m~[0m[0m {
+              [33m~[0m[0m allow_stopping_for_update = [90mnull[0m[0m [33m->[0m[0m true
+                id                        = "fhmf53etdt58e85uacpr"
+                name                      = "marketing-vm-0"
+                [90m# (27 unchanged attributes hidden)[0m[0m
+            },
+        ]
+        [90m# (5 unchanged attributes hidden)[0m[0m
+    }
+[90m
+─────────────────────────────────────────────────────────────────────────────[0m
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.

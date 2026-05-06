@@ -159,3 +159,53 @@ module "vpc_dev" {
 
 Документация к модулю сгенерирована командой: terraform-docs markdown table ./vpc > ./vpc/README.md  
 и находится в папке 04/src/vpc/README.md  
+
+
+## Задание 3
+
+1.Выведите список ресурсов в стейте.  
+2.Полностью удалите из стейта модуль vpc.  
+3.Полностью удалите из стейта модуль vm.  
+4.Импортируйте всё обратно. Проверьте terraform plan. Значимых(!!) изменений быть не должно. Приложите список выполненных команд и скриншоты процессы.  
+
+
+## Решение 3
+
+### Список ресурсов в state до удаления
+
+![state before](/img/04/task3_1.png)
+
+### Сохранение ID ресурсов для последующего импорта
+
+![saved ids](/img/04/task3_2.png)
+
+### Удаление модулей из state
+
+Из state были удалены:
+
+- `module.vpc_dev`
+- `module.marketing_vm`
+- `module.analytics_vm`
+
+![state after rm](/img/04/task3_3.png)
+
+### Импорт ресурсов обратно
+
+Были импортированы:
+
+- `module.vpc_dev.yandex_vpc_network.this`
+- `module.vpc_dev.yandex_vpc_subnet.this`
+- `module.marketing_vm.yandex_compute_instance.vm[0]`
+- `module.analytics_vm.yandex_compute_instance.vm[0]`
+
+### State после импорта
+
+![import process](img/04/task3_4.png)
+
+### Проверка terraform plan
+
+После импорта выполнена команда: terraform plan
+
+Значимых изменений нет:
+![changes](/img/04/task3_5.png)
+![changes](/img/04/task3_6.png)
