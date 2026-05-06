@@ -14,11 +14,11 @@ variable "zone" {
   default     = "ru-central1-a"
 }
 
-variable "service_account_key_file" {
-  description = "Path to Yandex Cloud service account authorized_key.json"
-  type        = string
-  default     = "./authorized_key.json"
-}
+# variable "service_account_key_file" {
+#   description = "Path to Yandex Cloud service account authorized_key.json"
+#   type        = string
+#   default     = "./authorized_key.json"
+# }
 
 variable "instance_user" {
   description = "Linux user created/configured by cloud-init"
@@ -66,4 +66,16 @@ variable "subnet_b_cidr" {
   description = "CIDR for subnet B"
   type        = string
   default     = "10.10.2.0/24"
+}
+
+variable "token" {
+  description = "OAuth token for Yandex Cloud"
+  type        = string
+  sensitive   = true
+}
+
+variable "default_zone" {
+  description = "Default Yandex Cloud zone"
+  type        = string
+  default     = "ru-central1-a"
 }
