@@ -198,6 +198,11 @@ module "vpc_dev" {
 - `module.marketing_vm.yandex_compute_instance.vm[0]`
 - `module.analytics_vm.yandex_compute_instance.vm[0]`
 
+### Процесс импорта:
+
+![import](/img/04/task3_7.png)
+![import](/img/04/task3_8.png)
+
 ### State после импорта
 
 ![import process](img/04/task3_4.png)
