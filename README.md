@@ -152,10 +152,10 @@ module "vpc_dev" {
   zone           = var.default_zone
   v4_cidr_blocks = var.default_cidr
 }
-
+```
 ### Terraform console
 
 ![module vpc_dev](../../img/04/task2_1.png)
 
-Документация к модулю сгенерирована командой: terraform-docs markdown table ./vpc > ./vpc/README.md
-и находится в папке 04/src/vpc/README.md
+Документация к модулю сгенерирована командой: terraform-docs markdown table ./vpc > ./vpc/README.md  
+и находится в папке 04/src/vpc/README.md  
