@@ -155,7 +155,7 @@ module "vpc_dev" {
 ```
 ### Terraform console
 
-![module vpc_dev](../../img/04/task2_1.png)
+![module vpc_dev](/img/04/task2_1.png)
 
 Документация к модулю сгенерирована командой: terraform-docs markdown table ./vpc > ./vpc/README.md  
 и находится в папке 04/src/vpc/README.md  
