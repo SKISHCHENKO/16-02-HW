@@ -11,9 +11,9 @@ module "marketing_vm" {
   source = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=main"
 
   env_name       = "marketing"
-  network_id     = yandex_vpc_network.develop.id
-  subnet_zones   = [yandex_vpc_subnet.develop_a.zone]
-  subnet_ids     = [yandex_vpc_subnet.develop_a.id]
+  network_id     = module.vpc_dev.network_id
+  subnet_zones   = [module.vpc_dev.subnet_zone]
+  subnet_ids     = [module.vpc_dev.subnet_id]
   instance_name  = "vm"
   instance_count = 1
 
@@ -42,9 +42,9 @@ module "analytics_vm" {
   source = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=main"
 
   env_name       = "analytics"
-  network_id     = yandex_vpc_network.develop.id
-  subnet_zones   = [yandex_vpc_subnet.develop_b.zone]
-  subnet_ids     = [yandex_vpc_subnet.develop_b.id]
+  network_id     = module.vpc_dev.network_id
+  subnet_zones   = [module.vpc_dev.subnet_zone]
+  subnet_ids     = [module.vpc_dev.subnet_id]
   instance_name  = "vm"
   instance_count = 1
 

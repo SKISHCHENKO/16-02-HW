@@ -79,3 +79,9 @@ variable "default_zone" {
   type        = string
   default     = "ru-central1-a"
 }
+
+variable "default_cidr" {
+  description = "Default subnet CIDR blocks"
+  type        = list(string)
+  default     = ["10.10.1.0/24"]
+}

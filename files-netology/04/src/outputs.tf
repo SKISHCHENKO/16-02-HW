@@ -37,3 +37,12 @@ output "module_analytics_vm" {
   description = "Full analytics module outputs for checking in terraform console/output"
   value       = module.analytics_vm
 }
+output "vpc_dev" {
+  description = "VPC module output"
+  value       = module.vpc_dev
+}
+
+output "vpc_dev_subnet" {
+  description = "Subnet information from VPC module"
+  value       = module.vpc_dev.subnet
+}

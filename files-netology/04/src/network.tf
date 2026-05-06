@@ -1,24 +1,15 @@
-resource "yandex_vpc_network" "develop" {
-  name = "${var.env_name}-network"
-}
+module "vpc_dev" {
+  source = "./vpc"
 
-resource "yandex_vpc_subnet" "develop_a" {
-  name           = "${var.env_name}-ru-central1-a"
-  zone           = "ru-central1-a"
-  network_id     = yandex_vpc_network.develop.id
-  v4_cidr_blocks = [var.subnet_a_cidr]
-}
-
-resource "yandex_vpc_subnet" "develop_b" {
-  name           = "${var.env_name}-ru-central1-b"
-  zone           = "ru-central1-b"
-  network_id     = yandex_vpc_network.develop.id
-  v4_cidr_blocks = [var.subnet_b_cidr]
+  env_name       = var.env_name
+  network_name   = "${var.env_name}-network"
+  zone           = var.default_zone
+  v4_cidr_blocks = var.default_cidr
 }
 
 resource "yandex_vpc_security_group" "vm_sg" {
   name       = "${var.env_name}-vm-sg"
-  network_id = yandex_vpc_network.develop.id
+  network_id = module.vpc_dev.network_id
 
   ingress {
     description    = "SSH"

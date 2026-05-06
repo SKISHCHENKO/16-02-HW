@@ -75,34 +75,87 @@ labels = {
 }
 ```
 
-## Скриншоты
+### Скриншоты
 
-### 1. Подключение к marketing VM и проверка nginx
+1. Подключение к marketing VM и проверка nginx
 
 ![Подключение к marketing VM и nginx -t](img/04/task1_1.png)
 
-### 2. Подключение к analytics VM и проверка nginx
+2. Подключение к analytics VM и проверка nginx
 
 ![Подключение к analytics VM и nginx -t](img/04/task1_2.png)
 
-### 3. ВМ в консоли Yandex Cloud с меткой project=marketing
+3. ВМ в консоли Yandex Cloud с меткой project=marketing
 
 ![Yandex Cloud marketing labels](img/04/task1_3.png)
 
-### 4. ВМ в консоли Yandex Cloud с меткой project=analytics
+4. ВМ в консоли Yandex Cloud с меткой project=analytics
 
 ![Yandex Cloud analytics labels](img/04/task1_4.png)
 
-### 5. Terraform console: module.marketing_vm
+5. Terraform console: module.marketing_vm
 
 ![Terraform console module.marketing_vm](img/04/task1_5.png)
 
-### 6. Terraform console: module.analytics_vm
+6. Terraform console: module.analytics_vm
 
 ![Terraform console module.analytics_vm](img/04/task1_6.png)
 
-### 7. Terraform console: отдельно labels
+7. Terraform console: отдельно labels
 
 ![Terraform console](img/04/task1_7.png)
 
 ---
+
+## Задание 2
+
+1.Напишите локальный модуль vpc, который будет создавать 2 ресурса: одну сеть и одну подсеть в зоне, объявленной при вызове модуля, например: ru-central1-a.  
+2.Вы должны передать в модуль переменные с названием сети, zone и v4_cidr_blocks.  
+3.Модуль должен возвращать в root module с помощью output информацию о yandex_vpc_subnet. Пришлите скриншот информации из terraform console о своем модуле. Пример: > module.vpc_dev  
+4.Замените ресурсы yandex_vpc_network и yandex_vpc_subnet созданным модулем. Не забудьте передать необходимые параметры сети из модуля vpc в модуль с виртуальной машиной.  
+5.Сгенерируйте документацию к модулю с помощью terraform-docs.  
+
+Пример вызова
+
+module "vpc_dev" {
+  source       = "./vpc"
+  env_name     = "develop"
+  zone = "ru-central1-a"
+  cidr = "10.0.1.0/24"
+}
+
+
+## Решение 2
+
+
+Создан локальный модуль `vpc`, который создаёт:
+
+- `yandex_vpc_network`
+- `yandex_vpc_subnet`
+
+В модуль передаются:
+
+- `network_name`
+- `zone`
+- `v4_cidr_blocks`
+
+Модуль возвращает информацию о подсети через output `subnet`.
+
+В root module ресурсы `yandex_vpc_network` и `yandex_vpc_subnet` заменены вызовом локального модуля:
+
+```hcl
+module "vpc_dev" {
+  source = "./vpc"
+
+  env_name       = var.env_name
+  network_name   = "${var.env_name}-network"
+  zone           = var.default_zone
+  v4_cidr_blocks = var.default_cidr
+}
+
+### Terraform console
+
+![module vpc_dev](../../img/04/task2_1.png)
+
+Документация к модулю сгенерирована командой: terraform-docs markdown table ./vpc > ./vpc/README.md
+и находится в папке 04/src/vpc/README.md
